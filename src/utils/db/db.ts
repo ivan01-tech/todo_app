@@ -6,7 +6,7 @@ import {
 import {Table} from '../../types/table.typing';
 
 enablePromise(true);
-export const DB_NAME = 'RN_LEARNING_TEST';
+export const DB_NAME = 'RN_TODO';
 
 export const connectToDatabase = async () => {
   return openDatabase(
@@ -20,25 +20,34 @@ export const connectToDatabase = async () => {
 };
 
 export const createTables = async (db: SQLiteDatabase) => {
-  const userPreferencesQuery = `
-    CREATE TABLE IF NOT EXISTS UserPreferences (
-        id INTEGER DEFAULT 1,
-        colorPreference TEXT,
-        languagePreference TEXT,
-        PRIMARY KEY(id)
-    )
-  `;
-  const contactsQuery = `
-   CREATE TABLE IF NOT EXISTS Contacts (
+  //   const userPreferencesQuery = `
+  //     CREATE TABLE IF NOT EXISTS UserPreferences (
+  //         id INTEGER DEFAULT 1,
+  //         colorPreference TEXT,
+  //         languagePreference TEXT,
+  //         PRIMARY KEY(id)
+  //     )
+  //   `;
+  // const contactsQuery = `
+  //  CREATE TABLE IF NOT EXISTS Contacts (
+  //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //     firstName TEXT,
+  //     name TEXT,
+  //     phoneNumber TEXT
+  //  )
+  // `;
+
+  const todosQuery = `
+   CREATE TABLE IF NOT EXISTS Todos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      firstName TEXT,
-      name TEXT,
-      phoneNumber TEXT
+      title TEXT NOT NULL,
+      description TEXT,
+      completed INTEGER NOT NULL
    )
   `;
   try {
-    await db.executeSql(userPreferencesQuery);
-    await db.executeSql(contactsQuery);
+    // await db.executeSql(userPreferencesQuery);
+    await db.executeSql(todosQuery);
   } catch (error) {
     console.error(error);
     throw Error('Failed to create tables');
@@ -72,3 +81,20 @@ export const removeTable = async (db: SQLiteDatabase, tableName: Table) => {
     throw Error(`Failed to drop table ${tableName}`);
   }
 };
+
+export function alteredTable(db: SQLiteDatabase) {
+  const alterTableQuery = `
+  ALTER TABLE Todos
+  ADD COLUMN completed INTEGER NOT NULL DEFAULT 0;
+`;
+
+  try {
+    db.transaction(tx => {
+      tx.executeSql(alterTableQuery, [], (tx, result) => {
+        console.log('Table altered successfully:', result);
+      });
+    });
+  } catch (error) {
+    console.error('Error altering table:', error);
+  }
+}

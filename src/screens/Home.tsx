@@ -18,7 +18,6 @@ import {RootStackType} from '../../App';
 const Home = ({navigation}: RootStackType) => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContact);
-  const [userInfo, setState] = useState<Contact[]>();
 
   useLayoutEffect(() => {
     const fetchData = async () => {
@@ -26,7 +25,6 @@ const Home = ({navigation}: RootStackType) => {
         const db = await connectToDatabase();
         const contacts = await getContacts(db);
 
-        setState(contacts);
         dispatch(addContacts(contacts));
 
         console.log('data: ', contacts);
@@ -45,20 +43,11 @@ const Home = ({navigation}: RootStackType) => {
   return (
     <SafeAreaView style={styles.sectionContainer}>
       <Text style={styles.sectionTitle}>Hello Ivan ! </Text>
-      {/* <Text>
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis
-        explicabo sunt temporibus beatae, quasi in eos, fugit numquam vel
-        voluptas maiores nisi, tempora incidunt non magni fuga vitae impedit
-        nobis. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius,
-        repellat voluptatem? Debitis quaerat voluptas repudiandae consequuntur
-        sunt quisquam nam reprehenderit, cupiditate alias deleniti accusamus,
-        exercitationem beatae laudantium iusto voluptate tenetur.
-      </Text> */}
 
-      <Tables
+      {/* <Tables
         contacts={contacts!}
         deleteContactHandler={deleteContactHandler}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

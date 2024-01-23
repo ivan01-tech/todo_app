@@ -5,3 +5,10 @@ export type Contact = {
   id?: string;
   phoneNumber: number;
 };
+
+export type Todo = {
+  title: string;
+  description: string;
+  id?: number;
+  completed: 0|1;
+};

@@ -38,7 +38,7 @@ function _alertIndex(
           try {
             const db = await connectToDatabase();
             const resp = await deleteContact(db, id);
-            await deleteContactHandler(id);
+             deleteContactHandler(id);
             console.log('\nresp : \n', resp);
 
             // handglingNotifications();

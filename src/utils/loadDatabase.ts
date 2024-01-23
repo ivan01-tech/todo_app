@@ -1,6 +1,6 @@
 import {useCallback} from 'react';
 import {connectToDatabase, createTables} from './db/db';
-export const loadData = useCallback(async () => {
+export const loadData = async () => {
   try {
     const db = await connectToDatabase();
     await createTables(db);
@@ -10,4 +10,4 @@ export const loadData = useCallback(async () => {
   } catch (error) {
     console.error(error);
   }
-}, []);
+}

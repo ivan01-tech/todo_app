@@ -12,17 +12,24 @@ import {
   NativeStackScreenProps,
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {loadData} from './src/utils/loadDatabase';
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import UnCompleted from './src/screens/UnCompleted';
 import Completed from './src/screens/Completed';
 import Splash from './src/screens/Splash';
 import {colors} from './src/styles/colors';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import NewTask from './src/screens/NewTask';
+import {Todo} from './src/types/table.typing';
+import UpdateTodo from './src/screens/UpdateTodo';
 
 export type RootListParams = {
   Home: undefined;
   Splash: undefined;
+  NewTask: undefined;
+  UpdateTodo: Todo;
 };
 
 export type HomeStackType = {
@@ -33,7 +40,9 @@ export type HomeStackType = {
 // const Drawer = createDrawerNavigator<RootListParams>();
 const RootStack = createNativeStackNavigator<RootListParams>();
 export type RootStackType = NativeStackScreenProps<RootListParams>;
-const Tab = createBottomTabNavigator();
+export type UpdateTaskType = NativeStackScreenProps<RootListParams , "UpdateTodo">;
+const Tab = createBottomTabNavigator<HomeStackType>();
+export type BottomType = BottomTabNavigationProp<HomeStackType>;
 
 function BottomTabs() {
   return (
@@ -43,18 +52,15 @@ function BottomTabs() {
         headerStyle: {
           backgroundColor: colors.first,
         },
-        // tabBarLabel(props) {
 
-        // },
         headerTintColor: '#eee',
         tabBarLabelStyle: {fontSize: 14, fontWeight: 'bold'},
         headerTitleAlign: 'center',
         tabBarIcon({color, focused}) {
           let iconName = '';
-          console.log('first draw : ' + route.name);
           switch (route.name) {
             case 'UnCompleted':
-              iconName = 'times';
+              iconName = 'clipboard-list';
               break;
             case 'Completed':
               iconName = 'check-circle';
@@ -66,32 +72,40 @@ function BottomTabs() {
           return (
             <FontAwesome5
               color={focused ? colors.first : colors.forth}
-              size={focused ? 30 : 20}
+              size={focused ? 20 : 15}
               name={iconName}
             />
           );
         },
       })}>
-      <Tab.Screen options={{}} name="Completed" component={Completed} />
+      <Tab.Screen name="Completed" component={Completed} />
       <Tab.Screen name="UnCompleted" component={UnCompleted} />
-      {/* <Tab.Screen name="Home" component={Home} /> */}
     </Tab.Navigator>
   );
 }
 
 function App(): JSX.Element {
-  // to connect to the database
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        screenOptions={({route, navigation}) => ({headerShown: false})}
+        screenOptions={({route, navigation}) => ({})}
         initialRouteName="Splash">
-        <RootStack.Screen name="Home" component={BottomTabs} />
-        <RootStack.Screen name="Splash" component={Splash} />
+        <RootStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Home"
+          component={BottomTabs}
+        />
+        <RootStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Splash"
+          component={Splash}
+        />
+        <RootStack.Screen name="NewTask" component={NewTask} />
+        <RootStack.Screen name="UpdateTodo" component={UpdateTodo} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

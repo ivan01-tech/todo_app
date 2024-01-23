@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import store from './store';
+import store, {RootState} from './store';
 import {Contact} from '../types/table.typing';
 
 export const contactSlicer = createSlice(
@@ -31,8 +31,8 @@ export const contactSlicer = createSlice(
   },
   // extraReducers(builder) {},
 );
-export function selectContact() {
-  return store.getState().contacts;
+export function selectContact(state: RootState) {
+  // return state.contacts;
 }
 export default contactSlicer.reducer;
 export const {addContact, deleteContact, addContacts} = contactSlicer.actions;

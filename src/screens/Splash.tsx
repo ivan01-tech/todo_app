@@ -3,23 +3,41 @@ import React, {useEffect} from 'react';
 import {RootStackType} from '../../App';
 import {Image} from 'react-native';
 import {colors} from '../styles/colors';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {loadData} from '../utils/loadDatabase';
+import {getTodos} from '../utils/db/TodosServices';
+import {connectToDatabase} from '../utils/db/db';
+import { addTodos } from '../redux/TaskSlice';
+import { useDispatch } from 'react-redux';
+
 const Splash = ({navigation}: RootStackType) => {
+  const dispatch = useDispatch()
   useEffect(function () {
-    let time = setTimeout(() => {
-      navigation.navigate('Home');
-    }, 2000);
+    let time: NodeJS.Timeout;
+    try {
+      loadData();
+      (async function () {
+        const db = await connectToDatabase();
+        const todos = await getTodos(db);
+       dispatch(addTodos(todos)); 
+      })();
+      setTimeout(() => {
+        navigation.navigate('Home');
+      }, 2000);
+    } catch (err) {
+      console.log(err);
+    }
 
     return () => clearTimeout(time);
   });
+
   return (
     <View style={styles.rootSplashScreen}>
-      <View>
-        <Text style={styles.appName}>Dask App</Text>
-        <FontAwesome5 name={'check-circle'} />
-      </View>
       <View style={styles.logo_container}>
         <Image source={require('../../assets/logo_png.jpeg')} />
+      </View>
+
+      <View>
+        <Text style={styles.appName}>Dask App</Text>
       </View>
     </View>
   );
@@ -34,11 +52,11 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 60,
+    gap: 40,
     backgroundColor: colors.first,
   },
   logo_container: {
-    flex: 1,
+    // flex: 1,
   },
   appName: {
     fontSize: 50,
