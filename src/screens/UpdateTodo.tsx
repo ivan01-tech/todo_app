@@ -15,6 +15,7 @@ import {useDispatch} from 'react-redux';
 import {addTodos, addTodo as addTask, updateTodo} from '../redux/TaskSlice';
 import {RootStackType, UpdateTaskType} from '../../App';
 import CheckBox from 'react-native-check-box';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const UpdateTodo = ({navigation, route}: UpdateTaskType) => {
   const dispatch = useDispatch();
@@ -59,6 +60,24 @@ const UpdateTodo = ({navigation, route}: UpdateTaskType) => {
           placeholder="Description"
           onChangeText={data => handlerChanged('description', data)}
           value={newCreated.description}></TextInput>
+
+        <View style={styles.color_group}>
+          {Object.values(colors.todoColor).map(prev => {
+            return (
+              <TouchableOpacity
+                style={[styles.color_btn, {backgroundColor: prev}]}
+                key={prev}
+                onPress={() => setNew(p => ({...p, color: prev}))}>
+                <Text style={{color: '#fff', textAlign: 'center'}}>{prev}</Text>
+                {newCreated.color === prev ? (
+                  <View style={styles.check_color}>
+                    <FontAwesome5Icon name="check" color={'#fff'} size={20} />
+                  </View>
+                ) : null}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
         <View style={styles.checkboxContainer}>
           <CheckBox
             style={{flex: 1, padding: 10}}
@@ -108,8 +127,36 @@ const styles = StyleSheet.create({
   checkbox: {
     alignSelf: 'center',
   },
+  color_btn: {
+    flex: 1,
+    paddingVertical: 10,
+    textAlign: 'center',
+    justifyContent: 'center',
+    color: '#FFFFFF',
+  },
   label: {
     margin: 8,
+  },
+  color_group: {
+    flexDirection: 'row',
+    width: '96%',
+    height: 50,
+    borderColor: '#000',
+    borderWidth: 1,
+    margin: 10,
+    position: 'relative',
+    borderRadius: 10,
+  },
+  check_color: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    backgroundColor: '#00000070',
   },
   btn: {
     backgroundColor: colors.third,

@@ -4,19 +4,20 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Button,
   FlatList,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import React, {useState} from 'react';
-import {colors} from '../styles/colors';
+import {GlobalStyles, colors} from '../styles/colors';
 import AddButton from '../components/AddButton';
 import {BottomType, RootStackType} from '../../App';
 import {useDispatch, useSelector} from 'react-redux';
-import {deleteTodo, selectTodos} from '../redux/TaskSlice';
+import {deleteTodo, selectTodos, updateTodo} from '../redux/TaskSlice';
 import {Todo} from '../types/table.typing';
 import {connectToDatabase} from '../utils/db/db';
-import {deleteTodoFoo} from '../utils/db/TodosServices';
+import {deleteTodoFoo, updateTodoFoo} from '../utils/db/TodosServices';
+import CheckBox from 'react-native-check-box';
 
 function _alertIndex(
   id: number,
@@ -46,6 +47,7 @@ function _alertIndex(
 const Completed = ({navigation}: RootStackType) => {
   const dispatch = useDispatch();
   const todos = useSelector(selectTodos);
+  const completedTodo = todos.filter(prev => prev.completed === 1);
   const [selectedId, setselectedId] = useState<number>();
   const onPress = () => {
     navigation.navigate('NewTask');
@@ -53,10 +55,25 @@ const Completed = ({navigation}: RootStackType) => {
   function deleteTodoFront(id: number) {
     dispatch(deleteTodo(id));
   }
+  const handlerCheckedTodo = async (task: Todo) => {
+    try {
+      const newObj: Todo = {
+        ...task,
+        completed: task.completed === 1 ? 0 : 1,
+      };
+      const db = await connectToDatabase();
+      const results = await updateTodoFoo(db, newObj);
+
+      dispatch(updateTodo(newObj));
+      ToastAndroid.show('Todo updated with success !', ToastAndroid.LONG);
+    } catch (error) {
+      ToastAndroid.show('Failed to update the task', ToastAndroid.LONG);
+    }
+  };
   return (
     <View style={styles.rootSplashScreen}>
       <FlatList
-        data={todos}
+        data={completedTodo}
         renderItem={({item: task}) => {
           return (
             <TouchableOpacity
@@ -64,17 +81,26 @@ const Completed = ({navigation}: RootStackType) => {
                 setselectedId(task.id);
                 navigation.navigate('UpdateTodo', task);
               }}
-              style={styles.todo_items}
+              style={GlobalStyles.todo_items}
               key={task.id?.toString() + task.title}>
-              <View style={styles.text_todo_item}>
-                <Text style={styles.todo_title}>{task.title}</Text>
-                <Text>{task.description}</Text>
+              <CheckBox
+                style={{paddingHorizontal: 10, paddingLeft: -5}}
+                onClick={() => handlerCheckedTodo(task)}
+                isChecked={task.completed === 1}
+              />
+              <View style={GlobalStyles.text_todo_item}>
+                <Text style={GlobalStyles.todo_title}>{task.title}</Text>
+                <Text>
+                  {task.description.length > 30
+                    ? task.description.slice(0, 30) + '...'
+                    : task.description}
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
                   _alertIndex(task.id!, deleteTodoFront);
                 }}>
-                <Text style={{color: colors.second}}>
+                <Text style={{color: '#ff3636'}}>
                   <MaterialIcons size={20} name="delete" />
                 </Text>
               </TouchableOpacity>
@@ -98,26 +124,7 @@ const styles = StyleSheet.create({
     padding: 10,
     position: 'relative',
   },
-  text_todo_item: {
-    flex: 1,
-  },
-  todo_title: {
-    fontSize: 20,
-    fontFamily: 'Roboto-Bold',
-    textTransform: 'capitalize',
-  },
-  todo_items: {
-    display: 'flex',
-    marginVertical: 4,
-    padding: 5,
-    height:80,
-    borderRadius: 5,
-    alignItems: 'center',
-
-    flexDirection: 'row',
-    width: '100%',
-    backgroundColor: colors.white,
-  },
+  
   logo_container: {
     flex: 1,
   },

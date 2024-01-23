@@ -21,6 +21,7 @@ const NewTask = ({navigation}: RootStackType) => {
     title: '',
     description: '',
     completed: 0,
+    color: colors.todoColor.white,
   });
 
   const handlerChanged = function (
@@ -44,9 +45,8 @@ const NewTask = ({navigation}: RootStackType) => {
       dispatch(addTask(newObj));
       ToastAndroid.show('Todo added with success !', ToastAndroid.LONG);
       navigation.navigate('Home');
-      
     } catch (error) {
-      console.log('failed to add to database', error);
+      console.log('failed to add to database : ', error);
     }
   };
   return (

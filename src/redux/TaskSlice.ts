@@ -29,6 +29,7 @@ export const TasksSlice = createSlice(
             prev.title = todo.title;
             prev.description = todo.description;
             prev.completed = todo.completed;
+            prev.color = todo.color;
           }
 
           return prev;

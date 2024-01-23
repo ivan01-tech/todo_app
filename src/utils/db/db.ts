@@ -6,7 +6,7 @@ import {
 import {Table} from '../../types/table.typing';
 
 enablePromise(true);
-export const DB_NAME = 'RN_TODO';
+export const DB_NAME = 'TODO_TEST';
 
 export const connectToDatabase = async () => {
   return openDatabase(
@@ -42,6 +42,7 @@ export const createTables = async (db: SQLiteDatabase) => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       description TEXT,
+      color TEXT,
       completed INTEGER NOT NULL
    )
   `;

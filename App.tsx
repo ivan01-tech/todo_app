@@ -40,14 +40,17 @@ export type HomeStackType = {
 // const Drawer = createDrawerNavigator<RootListParams>();
 const RootStack = createNativeStackNavigator<RootListParams>();
 export type RootStackType = NativeStackScreenProps<RootListParams>;
-export type UpdateTaskType = NativeStackScreenProps<RootListParams , "UpdateTodo">;
+export type UpdateTaskType = NativeStackScreenProps<
+  RootListParams,
+  'UpdateTodo'
+>;
 const Tab = createBottomTabNavigator<HomeStackType>();
 export type BottomType = BottomTabNavigationProp<HomeStackType>;
 
 function BottomTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Completed"
+      initialRouteName="UnCompleted"
       screenOptions={({navigation, route}) => ({
         headerStyle: {
           backgroundColor: colors.first,
@@ -78,8 +81,12 @@ function BottomTabs() {
           );
         },
       })}>
+      <Tab.Screen
+        name="UnCompleted"
+        options={{tabBarLabel: 'To Do'}}
+        component={UnCompleted}
+      />
       <Tab.Screen name="Completed" component={Completed} />
-      <Tab.Screen name="UnCompleted" component={UnCompleted} />
     </Tab.Navigator>
   );
 }

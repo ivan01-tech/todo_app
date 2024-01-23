@@ -3,10 +3,10 @@ import {Todo} from '../../types/table.typing';
 
 export const addTodo = async (db: SQLiteDatabase, Todo: Todo) => {
   const insertQuery = `
-   INSERT INTO Todos (title, description, completed)
-   VALUES (?, ?, ?)
+   INSERT INTO Todos (title, description, color, completed)
+   VALUES (?, ?, ?, ?)
  `;
-  const values = [Todo.title, Todo.description,0];
+  const values = [Todo.title, Todo.description,Todo.color,0];
   try {
     const result =  await db.executeSql(insertQuery, values);
     // console.log("passed values",result[0].insertId,);
@@ -36,12 +36,13 @@ export const getTodos = async (db: SQLiteDatabase): Promise<Todo[]> => {
 export const updateTodoFoo = async (db: SQLiteDatabase, updatedTodo: Todo) => {
   const updateQuery = `
     UPDATE Todos
-    SET title = ?, description = ?,completed = ?
+    SET title = ?, description = ?, color = ?, completed = ?
     WHERE id = ?
   `;
   const values = [
     updatedTodo.title,
     updatedTodo.description,
+    updatedTodo.color,
     updatedTodo.completed,
     updatedTodo.id,
   ];
