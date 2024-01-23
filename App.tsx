@@ -24,12 +24,14 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import NewTask from './src/screens/NewTask';
 import {Todo} from './src/types/table.typing';
 import UpdateTodo from './src/screens/UpdateTodo';
+import Camera from './src/screens/Camera';
 
 export type RootListParams = {
   Home: undefined;
   Splash: undefined;
   NewTask: undefined;
   UpdateTodo: Todo;
+  Camera: undefined;
 };
 
 export type HomeStackType = {
@@ -113,6 +115,7 @@ function App(): JSX.Element {
         />
         <RootStack.Screen name="NewTask" component={NewTask} />
         <RootStack.Screen name="UpdateTodo" component={UpdateTodo} />
+        <RootStack.Screen name="Camera" component={Camera} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

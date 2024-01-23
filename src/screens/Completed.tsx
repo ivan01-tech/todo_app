@@ -81,29 +81,36 @@ const Completed = ({navigation}: RootStackType) => {
                 setselectedId(task.id);
                 navigation.navigate('UpdateTodo', task);
               }}
-              style={GlobalStyles.todo_items}
+              style={GlobalStyles.todo_item_wrapper}
               key={task.id?.toString() + task.title}>
-              <CheckBox
-                style={{paddingHorizontal: 10, paddingLeft: -5}}
-                onClick={() => handlerCheckedTodo(task)}
-                isChecked={task.completed === 1}
-              />
-              <View style={GlobalStyles.text_todo_item}>
-                <Text style={GlobalStyles.todo_title}>{task.title}</Text>
-                <Text>
-                  {task.description.length > 30
-                    ? task.description.slice(0, 30) + '...'
-                    : task.description}
-                </Text>
+              <View
+                style={[
+                  GlobalStyles.color_bar,
+                  {backgroundColor: task.color},
+                ]}></View>
+              <View style={GlobalStyles.todo_items}>
+                <CheckBox
+                  style={{paddingHorizontal: 10, paddingLeft: -5}}
+                  onClick={() => handlerCheckedTodo(task)}
+                  isChecked={task.completed === 1}
+                />
+                <View style={GlobalStyles.text_todo_item}>
+                  <Text style={GlobalStyles.todo_title}>{task.title}</Text>
+                  <Text>
+                    {task.description.length > 30
+                      ? task.description.slice(0, 30) + '...'
+                      : task.description}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    _alertIndex(task.id!, deleteTodoFront);
+                  }}>
+                  <Text style={{color: '#ff3636'}}>
+                    <MaterialIcons size={20} name="delete" />
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  _alertIndex(task.id!, deleteTodoFront);
-                }}>
-                <Text style={{color: '#ff3636'}}>
-                  <MaterialIcons size={20} name="delete" />
-                </Text>
-              </TouchableOpacity>
             </TouchableOpacity>
           );
         }}
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
     padding: 10,
     position: 'relative',
   },
-  
+
   logo_container: {
     flex: 1,
   },

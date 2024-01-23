@@ -4,6 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ToastAndroid,
+  Alert,
+  Modal,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TextInput} from 'react-native';
@@ -20,6 +22,7 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 const UpdateTodo = ({navigation, route}: UpdateTaskType) => {
   const dispatch = useDispatch();
   const [newCreated, setNew] = useState<Todo>(route.params);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handlerChanged = function (
     params: keyof typeof newCreated,
@@ -34,11 +37,18 @@ const UpdateTodo = ({navigation, route}: UpdateTaskType) => {
     }
 
     try {
+      const currentDate = new Date();
+
       const db = await connectToDatabase();
       const results = await updateTodoFoo(db, newCreated);
 
+      const newDate = newCreated.time
+        ? new Date(
+            currentDate.getTime() + Number(newCreated.time) * 60000,
+          ).getTime()
+        : null;
       console.log('objects : ', newCreated);
-      dispatch(updateTodo(newCreated));
+      dispatch(updateTodo({...newCreated, time: newDate + ''}));
       ToastAndroid.show('Todo updated with success !', ToastAndroid.LONG);
       navigation.navigate('Home');
     } catch (error) {
@@ -78,6 +88,60 @@ const UpdateTodo = ({navigation, route}: UpdateTaskType) => {
             );
           })}
         </View>
+        {/* modal */}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View>
+                <Text style={styles.modalText}>Choose the time</Text>
+                <TextInput
+                  onChangeText={prev => {
+                    setNew(a => ({...a, time: prev}));
+                  }}
+                  keyboardType="numeric"
+                  style={styles.input_time}
+                />
+
+                <Text style={{fontSize: 15}}>in minute(s)</Text>
+              </View>
+
+              <View style={styles.btn_section}>
+                <TouchableOpacity
+                  style={[styles.button, styles.outline_btn]}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    // TODO:comm here later
+                    // setNew(prev => ({...prev, time: null}));
+                  }}>
+                  <Text style={[styles.textStyle, {color: colors.first}]}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.buttonClose]}
+                  onPress={async time => {
+                    setModalVisible(!modalVisible);
+                  }}>
+                  <Text style={styles.textStyle}>Save time</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          style={styles.bel_icon}>
+          <FontAwesome5Icon color={colors.white} name="bell" size={20} />
+        </TouchableOpacity>
         <View style={styles.checkboxContainer}>
           <CheckBox
             style={{flex: 1, padding: 10}}
@@ -124,6 +188,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20,
   },
+  input_time: {
+    borderColor: 'black',
+    borderWidth: 1,
+    padding: 10,
+    margin: 10,
+    width: 100,
+  },
+  bel_icon: {
+    width: '95%',
+    height: 50,
+    marginVertical: 10,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.first,
+  },
   checkbox: {
     alignSelf: 'center',
   },
@@ -166,6 +246,61 @@ const styles = StyleSheet.create({
     padding: 10,
     marginTop: 20,
     borderRadius: 10,
+  },
+  // modla
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000080',
+  },
+  modalView: {
+    margin: 5,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    justifyContent: 'space-between',
+    padding: 20,
+    width: '90%',
+    height: 300,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    flex: 1,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  outline_btn: {
+    borderBlockColor: colors.first,
+    borderWidth: 1,
+
+    backgroundColor: colors.white,
+  },
+  btn_section: {flexDirection: 'row', gap: 20},
+  modalText: {
+    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: '800',
+    textAlign: 'center',
   },
 });
 export default UpdateTodo;

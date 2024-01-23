@@ -21,6 +21,7 @@ const NewTask = ({navigation}: RootStackType) => {
     title: '',
     description: '',
     completed: 0,
+    time: null,
     color: colors.todoColor.white,
   });
 

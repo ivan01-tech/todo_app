@@ -6,7 +6,7 @@ import {
 import {Table} from '../../types/table.typing';
 
 enablePromise(true);
-export const DB_NAME = 'TODO_TEST';
+export const DB_NAME = 'TODO_RN_DB';
 
 export const connectToDatabase = async () => {
   return openDatabase(
@@ -20,22 +20,7 @@ export const connectToDatabase = async () => {
 };
 
 export const createTables = async (db: SQLiteDatabase) => {
-  //   const userPreferencesQuery = `
-  //     CREATE TABLE IF NOT EXISTS UserPreferences (
-  //         id INTEGER DEFAULT 1,
-  //         colorPreference TEXT,
-  //         languagePreference TEXT,
-  //         PRIMARY KEY(id)
-  //     )
-  //   `;
-  // const contactsQuery = `
-  //  CREATE TABLE IF NOT EXISTS Contacts (
-  //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //     firstName TEXT,
-  //     name TEXT,
-  //     phoneNumber TEXT
-  //  )
-  // `;
+ 
 
   const todosQuery = `
    CREATE TABLE IF NOT EXISTS Todos (
@@ -43,6 +28,7 @@ export const createTables = async (db: SQLiteDatabase) => {
       title TEXT NOT NULL,
       description TEXT,
       color TEXT,
+      time TEXT,
       completed INTEGER NOT NULL
    )
   `;

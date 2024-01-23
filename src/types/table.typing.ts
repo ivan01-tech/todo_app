@@ -10,6 +10,7 @@ export type Todo = {
   title: string;
   description: string;
   id?: number;
-  color:string;
-  completed: 0|1;
+  time?: string|null;
+  color: string;
+  completed: 0 | 1;
 };

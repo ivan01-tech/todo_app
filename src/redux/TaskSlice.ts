@@ -12,7 +12,7 @@ export const TasksSlice = createSlice(
         state.push(action.payload);
       },
       addTodos(state, action: PayloadAction<Todo[]>) {
-         state.push(...action.payload);
+        state.push(...action.payload);
       },
       deleteTodo(state, action: PayloadAction<number>) {
         return (state = state.filter(prev => {
@@ -30,6 +30,9 @@ export const TasksSlice = createSlice(
             prev.description = todo.description;
             prev.completed = todo.completed;
             prev.color = todo.color;
+            prev.time = todo.time;
+
+            console.log('in state  : ', prev,todo);
           }
 
           return prev;

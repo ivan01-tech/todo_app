@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 
 export const colors = {
-  first: '#0B60B0',
+  first: '#2196F3',
   second: '#6E2932',
   third: '#561C24',
   forth: '#4F6F52',
@@ -25,17 +25,14 @@ export const GlobalStyles = StyleSheet.create({
     fontFamily: 'Roboto-Bold',
     textTransform: 'capitalize',
   },
-  todo_items: {
-    display: 'flex',
-    marginVertical: 4,
-    padding: 5,
-    height: 80,
+  todo_item_wrapper: {
+    width: '100%',
     borderRadius: 5,
-    alignItems: 'center',
+    marginVertical: 4,
+
+    height: 80,
 
     flexDirection: 'row',
-    width: '100%',
-    backgroundColor: colors.white,
 
     shadowColor: '#000',
     shadowOffset: {
@@ -44,7 +41,21 @@ export const GlobalStyles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-
     elevation: 2,
+  },
+  color_bar: {
+    height: '100%',
+    width: 10,
+    marginRight: 4,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5,
+  },
+  todo_items: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+    paddingRight: 10,
+    flexDirection: 'row',
+    backgroundColor: colors.white,
   },
 });
